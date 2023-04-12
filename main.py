@@ -189,29 +189,29 @@ def process():
     
     send_notice('lp_price_alert', paydata)
 if __name__ == '__main__':
-    # scheduler = BackgroundScheduler()
-    # scheduler.add_job(process, 'interval', minutes=1)
-    # scheduler.start()
-    # Log('Press Ctrl+{0} to exit'.format('Break' if os.name == 'nt' else 'C'))
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(process, 'interval', minutes=1)
+    scheduler.start()
+    Log('Press Ctrl+{0} to exit'.format('Break' if os.name == 'nt' else 'C'))
 
-    # try:
-    #     # This is here to simulate application activity (which keeps the main thread alive).
-    #     while True:
-    #         time.sleep(2)
-    # except (KeyboardInterrupt, SystemExit):
-    #     # Not strictly necessary if daemonic mode is enabled but should be done if possible
-    #     scheduler.shutdown()
+    try:
+        # This is here to simulate application activity (which keeps the main thread alive).
+        while True:
+            time.sleep(2)
+    except (KeyboardInterrupt, SystemExit):
+        # Not strictly necessary if daemonic mode is enabled but should be done if possible
+        scheduler.shutdown()
 
-    (token0_address, token1_address) = sorts_token_address_before(BSC_USDC,
-                                                                  BSC_BUSD)
-    token0 = Token(token0_address)
-    token1 = Token(token1_address)
-    pool_address = get_pool_address(token0, token1, FeeAmount.LOWEST)
-    print(pool_address)
-    slot0 = get_pool_slot0(pool_address)
-    sqrtPriceX96 = slot0[0]
-    price = sqrtPriceX96 ** 2 / 2 ** 192
-    print(price)
+    # (token0_address, token1_address) = sorts_token_address_before(BSC_USDC,
+    #                                                               BSC_BUSD)
+    # token0 = Token(token0_address)
+    # token1 = Token(token1_address)
+    # pool_address = get_pool_address(token0, token1, FeeAmount.LOWEST)
+    # print(pool_address)
+    # slot0 = get_pool_slot0(pool_address)
+    # sqrtPriceX96 = slot0[0]
+    # price = sqrtPriceX96 ** 2 / 2 ** 192
+    # print(price)
     # # 构造JSON数据
     # data = {'protocol':'pancake','pair': 'busd/usdc', 'price': price}
     # send_notice('lp_price_alert', data)
