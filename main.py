@@ -190,7 +190,7 @@ def process():
     send_notice('lp_price_alert', paydata)
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
-    scheduler.add_job(process, 'interval', minutes=1)
+    scheduler.add_job(process, 'interval', minutes=20)
     scheduler.start()
     Log('Press Ctrl+{0} to exit'.format('Break' if os.name == 'nt' else 'C'))
 
