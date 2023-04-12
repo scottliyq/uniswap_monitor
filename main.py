@@ -129,15 +129,15 @@ def get_pool_address(token0: Token, token1: Token, fee: FeeAmount):
     web3_provider = Web3(HTTPProvider(RPC_URL))
     f = open('facory.abi.json')
     factory_json = json.load(f)
-    factory_contract = web3_provider.eth.contract(address=Web3.toChecksumAddress(FACTORY_ADDRESS), abi=factory_json)
-    return factory_contract.functions.getPool(Web3.toChecksumAddress(token0.address.lower()), Web3.toChecksumAddress(token1.address.lower()), fee.value).call()
+    factory_contract = web3_provider.eth.contract(address=Web3.to_checksum_address(FACTORY_ADDRESS), abi=factory_json)
+    return factory_contract.functions.getPool(Web3.to_checksum_address(token0.address.lower()), Web3.to_checksum_address(token1.address.lower()), fee.value).call()
 
 def get_pool_slot0(pool_address:str):
     web3_provider = Web3(HTTPProvider(RPC_URL))
     # todo bsc
     f = open('bsc.pool.abi.json')
     pool_address_json = json.load(f)
-    pool_contract = web3_provider.eth.contract(address=Web3.toChecksumAddress(pool_address.lower()), abi=pool_address_json)
+    pool_contract = web3_provider.eth.contract(address=Web3.to_checksum_address(pool_address.lower()), abi=pool_address_json)
     slot0 = pool_contract.functions.slot0().call();
     return slot0
 # token address排序
@@ -189,29 +189,29 @@ def process():
     
     send_notice('lp_price_alert', paydata)
 if __name__ == '__main__':
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(process, 'interval', minutes=1)
-    scheduler.start()
-    Log('Press Ctrl+{0} to exit'.format('Break' if os.name == 'nt' else 'C'))
+    # scheduler = BackgroundScheduler()
+    # scheduler.add_job(process, 'interval', minutes=1)
+    # scheduler.start()
+    # Log('Press Ctrl+{0} to exit'.format('Break' if os.name == 'nt' else 'C'))
 
-    try:
-        # This is here to simulate application activity (which keeps the main thread alive).
-        while True:
-            time.sleep(2)
-    except (KeyboardInterrupt, SystemExit):
-        # Not strictly necessary if daemonic mode is enabled but should be done if possible
-        scheduler.shutdown()
+    # try:
+    #     # This is here to simulate application activity (which keeps the main thread alive).
+    #     while True:
+    #         time.sleep(2)
+    # except (KeyboardInterrupt, SystemExit):
+    #     # Not strictly necessary if daemonic mode is enabled but should be done if possible
+    #     scheduler.shutdown()
 
-    # (token0_address, token1_address) = sorts_token_address_before(BSC_USDC,
-    #                                                               BSC_BUSD)
-    # token0 = Token(token0_address)
-    # token1 = Token(token1_address)
-    # pool_address = get_pool_address(token0, token1, FeeAmount.LOWEST)
-    # print(pool_address)
-    # slot0 = get_pool_slot0(pool_address)
-    # sqrtPriceX96 = slot0[0]
-    # price = sqrtPriceX96 ** 2 / 2 ** 192
-    # print(price)
+    (token0_address, token1_address) = sorts_token_address_before(BSC_USDC,
+                                                                  BSC_BUSD)
+    token0 = Token(token0_address)
+    token1 = Token(token1_address)
+    pool_address = get_pool_address(token0, token1, FeeAmount.LOWEST)
+    print(pool_address)
+    slot0 = get_pool_slot0(pool_address)
+    sqrtPriceX96 = slot0[0]
+    price = sqrtPriceX96 ** 2 / 2 ** 192
+    print(price)
     # # 构造JSON数据
     # data = {'protocol':'pancake','pair': 'busd/usdc', 'price': price}
     # send_notice('lp_price_alert', data)
